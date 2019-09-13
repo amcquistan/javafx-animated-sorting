@@ -48,7 +48,7 @@ public class Controller implements Initializable {
     private static final double DIMENSION = 880;
     private static final int MIN = (int) (-1 *  DIMENSION / 2);
     private static final int MAX = (int) (DIMENSION / 2);
-    private static final int MAX_PTS = 500;
+    private static final int MAX_PTS = 360;
 
     @FXML
     void handleLoadPoints(ActionEvent event) {
@@ -62,10 +62,7 @@ public class Controller implements Initializable {
         var sortMethod = sortMethodComboBox.getValue();
         if (sortMethod.equals(COMPARABLE)) {
             Collections.sort(points);
-            
-            if (ascendingRadioBtn.isSelected()) {
-                Collections.sort(points);
-            } else {
+            if (descendingRadioBtn.isSelected()) {
                 Collections.reverse(points);
             }
         } else {

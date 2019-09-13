@@ -11,7 +11,7 @@ public class MyPoint implements Comparable<MyPoint> {
         distance = Math.sqrt((x * x) + (y * y));
     }
     
-    double getX() {
+    final double getX() {
         return x;
     }
     
