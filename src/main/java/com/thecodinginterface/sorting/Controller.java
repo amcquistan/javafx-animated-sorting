@@ -12,6 +12,7 @@ import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
@@ -45,7 +46,7 @@ public class Controller implements Initializable {
     private static final String COMPARABLE = "Natural Ordering, X then Y Coords (Comparable)";
     private static final String COMPARATOR_DIST = "Euclidean Distance from Origin (Comparator)";
     private static final String COMPARATOR_DIST_EVEN_FIRST = "Even First then Distance (Comparator)";
-    private static final double DIMENSION = 880;
+    private static final double DIMENSION = 698;
     private static final int MIN = (int) (-1 *  DIMENSION / 2);
     private static final int MAX = (int) (DIMENSION / 2);
     private static final int MAX_PTS = 360;
@@ -57,6 +58,7 @@ public class Controller implements Initializable {
         for (int i = 0; i < MAX_PTS; i++) {
             var x = ThreadLocalRandom.current().nextInt(MIN, MAX);
             var y = ThreadLocalRandom.current().nextInt(MIN, MAX);
+            // Constructed in Euclidean Coordinate System
             points.add(new MyPoint(x, y));
         }
         var sortMethod = sortMethodComboBox.getValue();
@@ -75,7 +77,6 @@ public class Controller implements Initializable {
                     var aEven = a.isEvenDistance() ? 0 : 1;
                     var bEven = b.isEvenDistance() ? 0 : 1;
                     var c = Integer.compare(aEven, bEven);
-
                     return c == 0 ? Double.compare(a.getDistance(), b.getDistance()) : c;
                 };
             }
@@ -86,10 +87,11 @@ public class Controller implements Initializable {
                 Collections.sort(points, comparator.reversed());
             }
         }
-        
-        for (int i = 0; i < MAX_PTS; i++) {
-            var pt = points.get(i);
-            group.getChildren().add(makeCircle(pt, i * 10));
+
+        var i = 0;
+        for (var pt : points) {
+            var circle = makeCircle(pt, stackPane.getBoundsInLocal(),i++ * 10);
+            group.getChildren().add(circle);
         }
     }
 
@@ -105,8 +107,8 @@ public class Controller implements Initializable {
         sortMethodComboBox.getSelectionModel().selectFirst();
         
         group.getChildren().addAll(
-            makeLine(0.0, DIMENSION/2.0,  DIMENSION, DIMENSION/2),
-            makeLine(DIMENSION/2, 0.0, DIMENSION/2, DIMENSION)
+            makeLine(0, DIMENSION/2,  DIMENSION, DIMENSION/2),
+            makeLine(DIMENSION/2, 0, DIMENSION/2, DIMENSION)
         );
     }
     
@@ -117,9 +119,10 @@ public class Controller implements Initializable {
         return line;
     }
     
-    Circle makeCircle(MyPoint pt, double delay) {
+    Circle makeCircle(MyPoint pt, Bounds bounds, double delay) {
         var color = pt.isEvenDistance() ? Color.BLUE : Color.RED;
-        var circle = new Circle(pt.getX() + MAX, DIMENSION - (pt.getY() + MAX), 8, color);
+        var graphicsPt = pt.toGraphicsCoordinates(bounds);
+        var circle = new Circle(graphicsPt.getX(), graphicsPt.getY(), 8, color);
         var fadeTransition = new FadeTransition(Duration.millis(400), circle);
         circle.setOpacity(0);
         fadeTransition.setFromValue(0);

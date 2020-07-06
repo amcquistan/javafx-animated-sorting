@@ -15,6 +15,10 @@ repositories {
     mavenCentral()
 }
 
+sourceCompatibility = 13
+targetCompatibility = 13
+
+
 javafx {
     version = "12"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web' ]

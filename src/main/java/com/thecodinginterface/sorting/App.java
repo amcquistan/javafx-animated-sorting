@@ -17,6 +17,7 @@ public class App extends Application {
         var loader = new FXMLLoader(getClass().getResource("App.fxml"));
         var anchorPane = (AnchorPane) loader.load();
         primaryStage.setScene(new Scene(anchorPane));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 }

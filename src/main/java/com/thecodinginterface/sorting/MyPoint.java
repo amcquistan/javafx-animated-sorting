@@ -1,9 +1,11 @@
 package com.thecodinginterface.sorting;
 
+import javafx.geometry.Bounds;
+
 public class MyPoint implements Comparable<MyPoint> {
-    private double x;
-    private double y;
-    private double distance;
+    private final double x;
+    private final double y;
+    private final double distance;
     
     public MyPoint(double x, double y) {
         this.x = x;
@@ -25,6 +27,14 @@ public class MyPoint implements Comparable<MyPoint> {
     
     boolean isEvenDistance() {
         return (int)distance % 2 == 0;
+    }
+
+    MyPoint toGraphicsCoordinates(Bounds bounds) {
+        var centerX = bounds.getCenterX();
+        var centerY = bounds.getCenterY();
+        var newX = bounds.getCenterX() + x;
+        var newY = bounds.getMaxY() - (bounds.getCenterY() + y);
+        return new MyPoint(newX, newY);
     }
     
     @Override
