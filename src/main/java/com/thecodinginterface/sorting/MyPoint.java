@@ -30,8 +30,6 @@ public class MyPoint implements Comparable<MyPoint> {
     }
 
     MyPoint toGraphicsCoordinates(Bounds bounds) {
-        var centerX = bounds.getCenterX();
-        var centerY = bounds.getCenterY();
         var newX = bounds.getCenterX() + x;
         var newY = bounds.getMaxY() - (bounds.getCenterY() + y);
         return new MyPoint(newX, newY);
